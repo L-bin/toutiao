@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bin.dao.NewsDAO">
+	 <sql id="table">news</sql>
+	 <sql id="selectFields">id,title,link,image,like_count,comment_count,created_date,user_id</sql>
+	 <sql id="insertFields">title,link,image,like_count,comment_count,created_date,user_id</sql>
+	 
+	<insert id="addNews" parameterType="bin.model.News">
+		insert into 
+		<include refid="table"/>
+		(
+		<include refid="insertFields"/>
+		) 
+		values(#{title},#{link},#{image},#{likeCount},#{commentCount},#{createdDate},#{userId})
+	</insert>
+	
+	<select id="selectByUserIdAndOffset" resultType="bin.model.News">
+		select
+		<include refid="selectFields"/>
+		from
+		<include refid="table"/>
+		
+		<if test="userId!=0">
+			where user_id=#{userId}
+		</if>
+		order by created_date desc
+		limit #{offset},#{limit}
+	</select>
+	
+	<select id="getNewsById" parameterType="int" resultType="bin.model.News">
+		select
+		<include refid="selectFields"/>
+		from
+		<include refid="table"/>
+		
+		where id=#{newsId}
+	</select>
+	
+	<update id="updateCommentCount" >
+		update 
+		<include refid="table"/>
+		set comment_count=#{commentCount}
+		where id=#{id}
+	</update>
+	
+	<update id="updateLikeCount" >
+		update 
+		<include refid="table"/>
+		set like_count=#{likeCount}
+		where id=#{id}
+	</update>
+
+</mapper>

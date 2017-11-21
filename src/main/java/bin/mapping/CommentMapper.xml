@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bin.dao.CommentDAO">
+	 <sql id="table">comment</sql>
+	 <sql id="selectFields">id,user_id,content,entity_id,entity_type,created_date,status</sql>
+	 <sql id="insertFields">user_id,content,entity_id,entity_type,created_date,status</sql>
+	 
+	<insert id="addComment" parameterType="bin.model.Comment">
+		insert into
+		<include refid="table"/>
+		(
+		<include refid="insertFields"/> 
+		)
+		values(#{user_id},#{content},#{entity_id},#{entity_type},#{created_date},#{status})
+	</insert>
+	
+	<select id="selectByEntity"  resultType="bin.model.Comment">
+		select
+		<include refid="selectFields"/>
+		from
+		<include refid="table"/>
+		where entity_id=#{entityId} and entity_type=#{entityType}
+	</select>
+	
+	<select id="getCommentCount" resultType="int">
+		select count(id)
+		<include refid="selectFields"/>
+		from
+		<include refid="table"/>
+		where entity_id=#{entityId} and entity_type=#{entityType}
+	</select>
+
+	
+</mapper>
